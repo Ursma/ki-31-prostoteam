@@ -1,8 +1,8 @@
 package com.prisonproject.main.controller;
 
-import com.prisonproject.main.dto.request.AddCrimeRequest;
-import com.prisonproject.main.entity.CrimeEntity;
-import com.prisonproject.main.service.CrimeService;
+import com.prisonproject.main.dto.request.AddGuardRequest;
+import com.prisonproject.main.entity.GuardEntity;
+import com.prisonproject.main.service.GuardService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/crime")
 @AllArgsConstructor
-public class CrimeController {
-    private final CrimeService crimeService;
+@RequestMapping("/guard")
+public class GuardController {
+    private final GuardService guardService;
 
     @PutMapping("/add")
-    public CrimeEntity addCrime(@RequestBody AddCrimeRequest request){
-        return crimeService.addCrime(request);
+    public GuardEntity addGuard(@RequestBody AddGuardRequest request){
+        return guardService.addGuard(request);
     }
+
 }

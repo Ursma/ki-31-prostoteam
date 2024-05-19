@@ -11,4 +11,12 @@ public enum GenderTypeEnum {
 
     private final Integer genderType;
     private final String description;
+    public static String getDescriptionByGenderType(Integer genderType) {
+        for (GenderTypeEnum gender : GenderTypeEnum.values()) {
+            if (gender.getGenderType().equals(genderType)) {
+                return gender.getDescription();
+            }
+        }
+        return null; // или вы можете выбросить исключение, если гендер не найден
+    }
 }

@@ -1,6 +1,5 @@
-package com.prisonproject.main.dto;
+package com.prisonproject.main.dto.request;
 
-import com.prisonproject.main.enums.GenderTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

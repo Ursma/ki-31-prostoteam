@@ -1,6 +1,5 @@
 package com.prisonproject.main.entity;
 
-import com.prisonproject.main.enums.EventTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,9 +20,8 @@ public class EventLogsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Enumerated
     @Column(name = "event_type")
-    private EventTypeEnum eventType;
+    private Integer eventType;
     @Column(name = "date")
     private Instant date;
     @Column(name = "inmate_id")

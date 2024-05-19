@@ -1,7 +1,5 @@
 package com.prisonproject.main.entity;
 
-import com.prisonproject.main.dto.AddInmateRequest;
-import com.prisonproject.main.enums.GenderTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 

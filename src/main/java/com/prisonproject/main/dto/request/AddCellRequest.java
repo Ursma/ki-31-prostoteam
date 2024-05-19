@@ -1,4 +1,4 @@
-package com.prisonproject.main.dto;
+package com.prisonproject.main.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

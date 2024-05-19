@@ -1,6 +1,5 @@
 package com.prisonproject.main.entity;
 
-import com.prisonproject.main.enums.GenderTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +25,14 @@ public class GuardEntity {
     private Instant birthday;
     @Column(name = "start_date")
     private Instant startDate;
-    @Enumerated
     @Column(name = "gender")
-    private GenderTypeEnum gender;
+    private Integer gender;
+    @Column(name = "shift")
+    private Integer shift;
+    @Column(name = "cell_id")
+    private Integer cellId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cell_id", referencedColumnName = "id", insertable=false, updatable=false)
+    private CellEntity cellEntity;
 }

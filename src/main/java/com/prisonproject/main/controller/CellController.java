@@ -1,6 +1,7 @@
 package com.prisonproject.main.controller;
 
-import com.prisonproject.main.dto.AddCellRequest;
+import com.prisonproject.main.dto.request.AddCellRequest;
+import com.prisonproject.main.entity.CellEntity;
 import com.prisonproject.main.service.CellService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -17,7 +18,7 @@ public class CellController {
     private final CellService cellService;
 
     @PutMapping("/add")
-    public void addCell(@RequestBody AddCellRequest request){
-        cellService.addCell(request);
+    public CellEntity addCell(@RequestBody AddCellRequest request){
+        return cellService.addCell(request);
     }
 }
