@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/crime")
 @AllArgsConstructor
-@Tag(name = "Api for crimes managing")
+@Tag(name = "Запити для роботи зі статями")
 public class CrimeController {
     private final CrimeService crimeService;
 
     @PutMapping("/add")
-    @Operation(summary = "Add a new crime", description = "Adds a new crime record")
+    @Operation(summary = "Додати нову статю", description = "Додає статю з терміном ув'язнення")
     public CrimeEntity addCrime(@RequestBody AddCrimeRequest request){
         return crimeService.addCrime(request);
     }

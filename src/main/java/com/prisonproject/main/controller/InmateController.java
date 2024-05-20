@@ -3,6 +3,7 @@ package com.prisonproject.main.controller;
 import com.prisonproject.main.dto.request.AddInmateRequest;
 import com.prisonproject.main.dto.request.GetResponseById;
 import com.prisonproject.main.dto.response.InmateInfoResponse;
+import com.prisonproject.main.dto.response.InmateInfoWithoutCellResponse;
 import com.prisonproject.main.entity.InmateEntity;
 import com.prisonproject.main.service.InmateService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,22 +11,42 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/inmate")
 @AllArgsConstructor
-@Tag(name = "Api for inmates managing")
+@Tag(name = "Запити для роботи із в'язнями")
 public class InmateController {
     private final InmateService inmateService;
 
     @PutMapping("/add")
-    @Operation(summary = "Add a new inmate", description = "Adds a new inmate to the prison")
+    @Operation(summary = "Додати в'язня", description = "Додає в'язня до камери")
     public InmateEntity addInmateToPrison(@RequestBody AddInmateRequest request){
        return inmateService.addInmateToCell(request);
     }
 
     @PostMapping("/get")
-    @Operation(summary = "Get inmate info", description = "Gets information about an inmate")
+    @Operation(summary = "Отримати повню інформацію про в'язня", description = "Повертає повну інформацію про в'язня")
     public InmateInfoResponse getInmateInfo(@RequestBody GetResponseById body){
         return inmateService.getInmateResponse(body);
+    }
+
+    @PostMapping("/get/short")
+    @Operation(summary = "Отримати коротку інформацію про в'язня ", description = "Повертає коротку інформацію про в'язня")
+    public InmateInfoWithoutCellResponse getShortGuardInfo(@RequestBody GetResponseById body){
+        return inmateService.getShortInmateInfo(body);
+    }
+
+    @PostMapping("/get/all")
+    @Operation(summary = "Отримати коротку інформацію про всіх в'язнів ", description = "Повертає коротку інформацію про всіх в'язнів")
+    public List<InmateInfoWithoutCellResponse> getShortInfoAboutAllGuards(){
+        return inmateService.getShortInfoAboutAllInmates();
+    }
+
+    @PostMapping("/get/by/cell")
+    @Operation(summary = "Отримати в'язнів по певній камері", description = "Повертає усіх пов'язаних із камерою в'язнів")
+    public List<InmateInfoWithoutCellResponse> getAllGuardsByCellId(@RequestBody GetResponseById body){
+        return inmateService.getAllInmatesByCell(body);
     }
 }

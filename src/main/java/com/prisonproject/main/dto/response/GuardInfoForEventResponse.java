@@ -7,10 +7,8 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-public class GuardInfoWithoutCellResponse {
+public class GuardInfoForEventResponse {
     private String name;
     private String birthday;
-    private String gender;
     private String startDate;
-    private String shift;
 }

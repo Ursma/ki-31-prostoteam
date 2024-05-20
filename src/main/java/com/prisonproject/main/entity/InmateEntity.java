@@ -2,8 +2,7 @@ package com.prisonproject.main.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,13 +19,13 @@ public class InmateEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "birthday")
-    private Instant birthday;
+    private LocalDate birthday;
     @Column(name = "gender")
     private Integer gender;
     @Column(name = "start_date")
-    private Instant startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private Instant endDate;
+    private LocalDate endDate;
     @Column(name = "cell_id")
     private Integer cellId;
 

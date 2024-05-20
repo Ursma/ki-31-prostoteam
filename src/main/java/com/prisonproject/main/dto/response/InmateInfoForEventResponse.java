@@ -11,10 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class InmateInfoForEventResponse {
     private String name;
-    private String birthday;
     private String gender;
-    private String startDate;
-    private String endDate;
     private List<CrimeInfoResponse> crimes;
     private String cell;
 }

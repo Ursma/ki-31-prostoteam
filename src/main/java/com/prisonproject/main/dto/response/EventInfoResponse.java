@@ -13,5 +13,5 @@ public class EventInfoResponse {
     private String name;
     private String description;
     private List<InmateInfoForEventResponse> inmates;
-    private List<GuardInfoWithoutCellResponse> guards;
+    private List<GuardInfoForEventResponse> guards;
 }

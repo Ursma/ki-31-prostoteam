@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "guard")
@@ -22,9 +21,9 @@ public class GuardEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "birthday")
-    private Instant birthday;
+    private LocalDate birthday;
     @Column(name = "start_date")
-    private Instant startDate;
+    private LocalDate startDate;
     @Column(name = "gender")
     private Integer gender;
     @Column(name = "shift")

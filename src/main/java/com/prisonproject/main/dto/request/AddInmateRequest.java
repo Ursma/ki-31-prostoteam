@@ -3,8 +3,7 @@ package com.prisonproject.main.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -12,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 public class AddInmateRequest {
     private String name;
-    private Instant birthday;
+    private LocalDate birthday;
     private Integer gender;
-    private Instant startDate;
-    private Instant endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private List<Integer> crimeIds;
     private Integer cellId;
 }

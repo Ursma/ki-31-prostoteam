@@ -3,6 +3,7 @@ package com.prisonproject.main.service;
 import com.prisonproject.main.dto.request.AddInmateRequest;
 import com.prisonproject.main.dto.request.GetResponseById;
 import com.prisonproject.main.dto.response.InmateInfoResponse;
+import com.prisonproject.main.dto.response.InmateInfoWithoutCellResponse;
 import com.prisonproject.main.entity.CellEntity;
 import com.prisonproject.main.entity.CrimeEntity;
 import com.prisonproject.main.entity.InmateEntity;
@@ -55,5 +56,18 @@ public class InmateService {
     public InmateInfoResponse getInmateResponse(GetResponseById body){
         return globalResponseMapper.inmateEntityToResponse(inmateRepository.findById(body.getId())
                 .orElseThrow(() -> new EntityNotFoundException("В'язня не знайдено")));
+    }
+
+    public InmateInfoWithoutCellResponse getShortInmateInfo(GetResponseById body) {
+        return globalResponseMapper.inmateEntityToShortResponse(inmateRepository.findById(body.getId())
+                .orElseThrow(() -> new EntityNotFoundException("В'язня не знайдено")));
+    }
+
+    public List<InmateInfoWithoutCellResponse> getShortInfoAboutAllInmates() {
+        return inmateRepository.findAll().stream().map(globalResponseMapper::inmateEntityToShortResponse).toList();
+    }
+
+    public List<InmateInfoWithoutCellResponse> getAllInmatesByCell(GetResponseById body) {
+        return inmateRepository.findAllByCellId(body.getId()).stream().map(globalResponseMapper::inmateEntityToShortResponse).toList();
     }
 }

@@ -11,6 +11,7 @@ public class GuardInfoResponse {
     private String name;
     private String birthday;
     private String gender;
+    private String shift;
     private String startDate;
     private CellInfoWithoutGuardResponse cell;
 }

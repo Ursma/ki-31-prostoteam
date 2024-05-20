@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -23,7 +22,7 @@ public class EventLogsEntity {
     @Column(name = "event_type")
     private Integer eventType;
     @Column(name = "date")
-    private Instant date;
+    private LocalDate date;
     @Column(name = "inmate_id")
     private Integer inmateId;
     @Column(name = "guard_id")

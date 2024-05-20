@@ -5,42 +5,63 @@ import com.prisonproject.main.entity.CellEntity;
 import com.prisonproject.main.entity.GuardEntity;
 import com.prisonproject.main.entity.InmateEntity;
 import com.prisonproject.main.enums.GenderTypeEnum;
+import com.prisonproject.main.enums.MonthTranslateEnum;
+import com.prisonproject.main.enums.ShiftEnum;
 import com.prisonproject.main.repository.GuardRepository;
 import com.prisonproject.main.repository.InmateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
 public class GlobalResponseMapper {
+    protected static final String CELL_NUMBER = "Камера номер ";
+    protected static final String CURRENT_OCCUPANCY = "Місця в камері ";
+    protected static final String BIRTH_DATE = "Дата народження ";
+    protected static final String YEAR = " року";
+    protected static final String REGISTRATED = "Зареєстровано ";
+    protected static final String FREE = "Дата визволення ";
+    protected static final String STATE = "Статя ";
+    protected static final String DURABILITY = "Років ув'язнення ";
+
     private final GuardRepository guardRepository;
     private final InmateRepository inmateRepository;
     public InmateInfoResponse inmateEntityToResponse(InmateEntity entity){
         return InmateInfoResponse.builder()
                 .name(entity.getName())
                 .cell(CellInfoWithoutInmateResponse.builder()
-                        .cellNumber("Камера номер " + entity.getCellEntity().getCellNumber())
-                        .currentCapacity("Місця в камері " + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
+                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellNumber())
+                        .currentCapacity(CURRENT_OCCUPANCY + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
                         .guards(guardRepository.findAllByCellId(entity.getCellEntity().getId())
                                 .stream()
                                 .map(g -> GuardInfoWithoutCellResponse.builder()
                                         .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))
-                                        .birthday("Дата народження " + g.getBirthday())
-                                        .startDate("Зареєстровано " + g.getStartDate())
+                                        .birthday(BIRTH_DATE + g.getBirthday().getDayOfMonth() + " " +
+                                                MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
+                                                g.getBirthday().getYear() + YEAR)
+                                        .startDate(REGISTRATED + g.getStartDate().getDayOfMonth() + " " +
+                                                MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
+                                                g.getBirthday().getYear() + YEAR)
                                         .name(g.getName())
+                                        .shift(ShiftEnum.getDescriptionByNum(g.getShift()))
                                         .build())
                                 .toList())
                         .build())
-                .endDate("Дата визволення " + entity.getEndDate())
-                .birthday("Дата народження " + entity.getBirthday())
-                .startDate("Зареєстровано " + entity.getStartDate())
+                .endDate(FREE + entity.getEndDate().getDayOfMonth() + " " +
+                MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                entity.getBirthday().getYear() + YEAR)
+                .birthday(BIRTH_DATE + entity.getBirthday().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
                 .crimes(entity.getCrimeEntityList()
                         .stream()
                         .map(c ->  CrimeInfoResponse.builder()
-                                .state("Статя " + c.getCrimeNumber())
-                                .durability("Років ув'язнення " + c.getDurability())
+                                .state(STATE + c.getCrimeNumber())
+                                .durability(DURABILITY + c.getDurability())
                                 .build())
                         .toList())
                 .gender(GenderTypeEnum.getDescriptionByGenderType(entity.getGender()))
@@ -49,21 +70,27 @@ public class GlobalResponseMapper {
 
     public CellInfoResponse cellEntityToResponse(CellEntity entity){
         return CellInfoResponse.builder()
-                .currentCapacity("Місця в камері " + entity.getCurrentOccupancy() + "/" + entity.getCapacity())
-                .cellNumber("Камера номер " + entity.getCellNumber())
+                .currentCapacity(CURRENT_OCCUPANCY + entity.getCurrentOccupancy() + "/" + entity.getCapacity())
+                .cellNumber(CELL_NUMBER + entity.getCellNumber())
                 .inmates(inmateRepository.findAllByCellId(entity.getId())
                         .stream()
                         .map(i -> InmateInfoWithoutCellResponse.builder()
                                 .name(i.getName())
-                                .endDate("Дата визволення " + i.getEndDate())
-                                .birthday("Дата народження " + i.getBirthday())
-                                .startDate("Зареєстровано " + i.getStartDate())
+                                .endDate(FREE + i.getEndDate().getDayOfMonth() + " " +
+                                        MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                        i.getBirthday().getYear() + YEAR)
+                                .birthday(BIRTH_DATE + i.getBirthday().getDayOfMonth() + " " +
+                                        MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                        i.getBirthday().getYear() + YEAR)
+                                .startDate(REGISTRATED + i.getStartDate().getDayOfMonth() + " " +
+                                        MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                        i.getBirthday().getYear() + YEAR)
                                 .gender(GenderTypeEnum.getDescriptionByGenderType(i.getGender()))
                                 .crimes(i.getCrimeEntityList()
                                         .stream()
                                         .map(c ->  CrimeInfoResponse.builder()
-                                                .state("Статя " + c.getCrimeNumber())
-                                                .durability("Років ув'язнення " + c.getDurability())
+                                                .state(STATE + c.getCrimeNumber())
+                                                .durability(DURABILITY + c.getDurability())
                                                 .build())
                                         .toList())
                                 .build())
@@ -72,8 +99,12 @@ public class GlobalResponseMapper {
                         .stream()
                         .map(g -> GuardInfoWithoutCellResponse.builder()
                                 .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))
-                                .birthday("Дата народження " + g.getBirthday())
-                                .startDate("Зареєстровано " + g.getStartDate())
+                                .birthday(BIRTH_DATE + g.getBirthday().getDayOfMonth() + " " +
+                                        MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
+                                        g.getBirthday().getYear() + YEAR)
+                                .startDate(REGISTRATED + g.getStartDate().getDayOfMonth() + " " +
+                                        MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
+                                        g.getBirthday().getYear() + YEAR)
                                 .name(g.getName())
                                 .build())
                         .toList())
@@ -83,30 +114,76 @@ public class GlobalResponseMapper {
     public GuardInfoResponse guardEntityToResponse(GuardEntity entity){
         return GuardInfoResponse.builder()
                 .gender(GenderTypeEnum.getDescriptionByGenderType(entity.getGender()))
-                .birthday("Дата народження " + entity.getBirthday())
-                .startDate("Зареєстровано " + entity.getStartDate())
+                .birthday(BIRTH_DATE + entity.getBirthday().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
                 .name(entity.getName())
+                .shift(ShiftEnum.getDescriptionByNum(entity.getShift()))
                 .cell(CellInfoWithoutGuardResponse.builder()
                         .inmates(inmateRepository.findAllByCellId(entity.getCellId())
                                 .stream()
                                 .map(i -> InmateInfoWithoutCellResponse.builder()
                                         .name(i.getName())
-                                        .endDate("Дата визволення " + i.getEndDate())
-                                        .birthday("Дата народження " + i.getBirthday())
-                                        .startDate("Зареєстровано " + i.getStartDate())
+                                        .endDate(FREE + i.getEndDate().getDayOfMonth() + " " +
+                                                MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                                i.getBirthday().getYear() + YEAR)
+                                        .birthday(BIRTH_DATE + i.getBirthday().getDayOfMonth() + " " +
+                                                MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                                i.getBirthday().getYear() + YEAR)
+                                        .startDate(REGISTRATED + i.getStartDate().getDayOfMonth() + " " +
+                                                MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
+                                                i.getBirthday().getYear() + YEAR)
                                         .gender(GenderTypeEnum.getDescriptionByGenderType(i.getGender()))
                                         .crimes(i.getCrimeEntityList()
                                                 .stream()
                                                 .map(c ->  CrimeInfoResponse.builder()
-                                                        .state("Статя " + c.getCrimeNumber())
-                                                        .durability("Років ув'язнення " + c.getDurability())
+                                                        .state(STATE + c.getCrimeNumber())
+                                                        .durability(DURABILITY + c.getDurability())
                                                         .build())
                                                 .toList())
                                         .build())
                                 .toList())
-                        .cellNumber("Камера номер " + entity.getCellEntity().getCellNumber())
-                        .currentCapacity("Місця в камері " + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
+                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellNumber())
+                        .currentCapacity(CURRENT_OCCUPANCY + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
                         .build())
                 .build();
     }
+
+    public GuardInfoWithoutCellResponse guardEntityToShortInfoResponse(GuardEntity entity) {
+        return GuardInfoWithoutCellResponse.builder()
+                .name(entity.getName())
+                .shift(ShiftEnum.getDescriptionByNum(entity.getShift()))
+                .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .birthday(BIRTH_DATE +entity.getBirthday().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .gender(GenderTypeEnum.getDescriptionByGenderType(entity.getGender()))
+                .build();
+    }
+
+    public InmateInfoWithoutCellResponse inmateEntityToShortResponse(InmateEntity entity) {
+        return InmateInfoWithoutCellResponse.builder()
+                .name(entity.getName())
+                .gender(GenderTypeEnum.getDescriptionByGenderType(entity.getGender()))
+                .endDate(BIRTH_DATE + entity.getEndDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .birthday(BIRTH_DATE + entity.getBirthday().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
+                        entity.getBirthday().getYear() + YEAR)
+                .crimes(entity.getCrimeEntityList().stream().map(c -> CrimeInfoResponse.builder()
+                        .state(STATE + c.getCrimeNumber())
+                        .durability(DURABILITY + c.getDurability())
+                        .build()).toList())
+                .build();
+    }
 }
+

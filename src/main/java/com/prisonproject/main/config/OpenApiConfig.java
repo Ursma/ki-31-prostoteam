@@ -29,8 +29,10 @@ public class OpenApiConfig {
                 !path.contains("/inmate/add") &&
                         !path.contains("/inmate/get") &&
                         !path.contains("/cell/add") &&
+                        !path.contains("/cell/get") &&
                         !path.contains("/crime/add") &&
-                        !path.contains("/guard/add")
+                        !path.contains("/guard/add") &&
+                        !path.contains("/guard/get")
         );
     }
 }
