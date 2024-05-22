@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Inmate Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>Add Inmate</h1>
+<form id="inmateForm">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required><br><br>
+
+  <label for="birthday">Birthday:</label>
+  <input type="date" id="birthday" name="birthday" required><br><br>
+
+  <label for="gender">Gender:</label>
+  <select id="gender" name="gender" required>
+    <option value="1">Male</option>
+    <option value="2">Female</option>
+    <option value="3">Other</option>
+  </select><br><br>
+
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" name="startDate" required><br><br>
+
+  <label for="crimeNumbers">Crime Numbers (comma separated):</label>
+  <input type="text" id="crimeNumbers" name="crimeNumbers" required><br><br>
+
+  <label for="cellName">Cell Name:</label>
+  <input type="text" id="cellName" name="cellName" required><br><br>
+
+  <button type="button" onclick="submitForm()">Submit</button>
+</form>
+
+<script>
+  function submitForm() {
+    const name = document.getElementById('name').value;
+    const birthday = document.getElementById('birthday').value;
+    const gender = document.getElementById('gender').value;
+    const startDate = document.getElementById('startDate').value;
+    const crimeNumbers = document.getElementById('crimeNumbers').value.split(',').map(s => s.trim());
+    const cellName = document.getElementById('cellName').value;
+
+    axios.put('/inmate/add', {
+      name: name,
+      birthday: birthday,
+      gender: parseInt(gender),
+      startDate: startDate,
+      crimeNumbers: crimeNumbers,
+      cellName: cellName
+    })
+            .then(response => {
+              console.log('Успешно:', response.data);
+            })
+            .catch(error => {
+              console.error('Ошибка при отправке данных на сервер:', error);
+            });
+  }
+</script>
+</body>
+</html>

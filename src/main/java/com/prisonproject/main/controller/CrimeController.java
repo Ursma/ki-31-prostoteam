@@ -16,7 +16,6 @@ public class CrimeController {
     private final CrimeService crimeService;
 
     @PutMapping("/add")
-    @CrossOrigin(origins = "http://127.0.0.1:8081")
     @Operation(summary = "Додати нову статю", description = "Додає статю з терміном ув'язнення")
     public CrimeEntity addCrime(@RequestBody AddCrimeRequest request){
         return crimeService.addCrime(request);

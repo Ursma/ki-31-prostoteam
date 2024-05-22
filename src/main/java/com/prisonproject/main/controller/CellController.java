@@ -17,7 +17,6 @@ public class CellController {
     private final CellService cellService;
 
     @PutMapping("/add")
-    @CrossOrigin(origins = "http://127.0.0.1:8081")
     @Operation(summary = "Get all cells")
     public CellEntity addCell(@RequestBody AddCellRequest request){
         return cellService.addCell(request);
