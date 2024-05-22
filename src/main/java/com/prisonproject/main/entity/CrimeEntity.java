@@ -17,7 +17,7 @@ public class CrimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "crime_number")
+    @Column(name = "crime_name")
     private String crimeNumber;
     @Column(name = "durability")
     private Integer durability;
