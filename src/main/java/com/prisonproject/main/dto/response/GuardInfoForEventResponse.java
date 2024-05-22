@@ -9,6 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GuardInfoForEventResponse {
     private String name;
-    private String birthday;
+    private String gender;
     private String startDate;
 }

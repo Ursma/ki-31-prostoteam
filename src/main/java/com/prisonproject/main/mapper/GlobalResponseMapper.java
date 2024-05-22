@@ -1,9 +1,8 @@
 package com.prisonproject.main.mapper;
 
 import com.prisonproject.main.dto.response.*;
-import com.prisonproject.main.entity.CellEntity;
-import com.prisonproject.main.entity.GuardEntity;
-import com.prisonproject.main.entity.InmateEntity;
+import com.prisonproject.main.entity.*;
+import com.prisonproject.main.enums.EventTypeEnum;
 import com.prisonproject.main.enums.GenderTypeEnum;
 import com.prisonproject.main.enums.MonthTranslateEnum;
 import com.prisonproject.main.enums.ShiftEnum;
@@ -11,6 +10,8 @@ import com.prisonproject.main.repository.GuardRepository;
 import com.prisonproject.main.repository.InmateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -105,6 +106,7 @@ public class GlobalResponseMapper {
                                 .startDate(REGISTRATED + g.getStartDate().getDayOfMonth() + " " +
                                         MonthTranslateEnum.getDescription(g.getStartDate().getMonth()) + " " +
                                         g.getStartDate().getYear() + YEAR)
+                                .shift(ShiftEnum.getDescriptionByNum(g.getShift()))
                                 .name(g.getName())
                                 .build())
                         .toList())
@@ -184,6 +186,44 @@ public class GlobalResponseMapper {
                         .durability(DURABILITY + c.getDurability())
                         .build()).toList())
                 .build();
+    }
+
+    public List<CrimeInfoResponse> crimeEntitiesToResponse(List<CrimeEntity> crimes) {
+        return crimes.stream()
+                .map(c -> CrimeInfoResponse.builder()
+                        .state("Статя: " + c.getCrimeNumber())
+                        .durability("Строк ув'язнення " + c.getDurability() + " років")
+                        .build())
+                .toList();
+    }
+
+    public List<EventInfoResponse> eventEntityToResponse(List<EventLogsEntity> events){
+        return events.stream()
+                .map(e -> EventInfoResponse.builder()
+                        .name(EventTypeEnum.getNameByEventNumber(e.getEventType()))
+                        .description(EventTypeEnum.getDescriptionByEventNumber(e.getEventType()))
+                        .inmates(e.getInmateEntityList().stream()
+                                .map(i -> InmateInfoForEventResponse.builder()
+                                        .name(i.getName())
+                                        .gender(GenderTypeEnum.getDescriptionByGenderType(i.getGender()))
+                                        .crimes(i.getCrimeEntityList().stream()
+                                                .map(c -> CrimeInfoResponse.builder()
+                                                        .state(c.getCrimeNumber())
+                                                        .durability(DURABILITY + c.getDurability())
+                                                        .build())
+                                                .toList())
+                                        .cell(CELL_NUMBER + i.getCellEntity().getCellName())
+                                        .build())
+                                .toList())
+                        .guards(e.getGuradEntityList().stream()
+                                .map(g -> GuardInfoForEventResponse.builder()
+                                        .name(g.getName())
+                                        .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))
+                                        .startDate(REGISTRATED + g.getStartDate())
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 }
 

@@ -34,5 +34,5 @@ public class EventLogsEntity {
 
     @OneToMany
     @JoinColumn(name = "id", referencedColumnName = "inmate_id")
-    private List<InmateEntity> inmateEntityListList;
+    private List<InmateEntity> inmateEntityList;
 }
