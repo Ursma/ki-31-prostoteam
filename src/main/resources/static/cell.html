@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cell Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff; /* светло-голубой цвет фона */
+            color: #333;
+        }
+        h1 {
+            color: #007BFF; /* синий цвет заголовка */
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #007BFF; /* синий цвет меток */
+        }
+        input[type="text"],
+        select {
+            width: calc(100% - 22px); /* учитывать padding и border */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF; /* синий цвет кнопки */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3; /* темно-синий цвет при наведении */
+        }
+        .info-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Cell Management</h1>
+
+    <!-- Form to Add Cell -->
+    <form id="cellForm">
+        <h2>Add Cell</h2>
+        <label for="cellName">Cell Name:</label>
+        <input type="text" id="cellName" name="cellName" required><br>
+
+        <label for="currentOccupancy">Current Occupancy:</label>
+        <input type="text" id="currentOccupancy" name="currentOccupancy" required><br>
+
+        <label for="capacity">Capacity:</label>
+        <input type="text" id="capacity" name="capacity" required><br>
+
+        <button type="button" onclick="submitAddCellForm()">Submit</button>
+    </form>
+
+    <script>
+        // JavaScript функции для взаимодействия с сервером
+        function submitAddCellForm() {
+            // Получаем данные из формы
+            const cellName = document.getElementById('cellName').value;
+            const currentOccupancy = document.getElementById('currentOccupancy').value;
+            const capacity = document.getElementById('capacity').value;
+
+            // Отправляем данные на сервер
+            axios.put('/cell/add', {
+                cellName: cellName,
+                currentOccupancy: currentOccupancy,
+                capacity: capacity
+            })
+            .then(response => {
+                console.log('Успешно:', response.data);
+                alert('Cell added successfully');
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке данных на сервер:', error);
+                alert('Error adding cell');
+            });
+        }
+    </script>
+</body>
+</html>

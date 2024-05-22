@@ -23,16 +23,20 @@ public class EventLogsEntity {
     private Integer eventType;
     @Column(name = "date")
     private LocalDate date;
-    @Column(name = "inmate_id")
-    private Integer inmateId;
-    @Column(name = "guard_id")
-    private Integer guardId;
 
-    @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "guard_id")
-    private List<GuardEntity> guradEntityList;
+    @ManyToMany
+    @JoinTable(
+            name = "event_guard",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "guard_id")
+    )
+    private List<GuardEntity> guardEntityList;
 
-    @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "inmate_id")
+    @ManyToMany
+    @JoinTable(
+            name = "event_inmate",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "inmate_id")
+    )
     private List<InmateEntity> inmateEntityList;
 }

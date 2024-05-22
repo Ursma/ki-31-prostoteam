@@ -32,6 +32,8 @@ public class OpenApiConfig {
                         !path.contains("/cell/get") &&
                         !path.contains("/crime/add") &&
                         !path.contains("/guard/add") &&
+                        !path.contains(" /get/by/celld") &&
+                        !path.contains(" /event/add") &&
                         !path.contains("/guard/get")
         );
     }

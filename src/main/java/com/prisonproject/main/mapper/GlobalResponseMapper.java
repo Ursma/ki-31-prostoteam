@@ -197,7 +197,7 @@ public class GlobalResponseMapper {
                 .toList();
     }
 
-    public List<EventInfoResponse> eventEntityToResponse(List<EventLogsEntity> events){
+    public List<EventInfoResponse> eventEntitiesToResponse(List<EventLogsEntity> events){
         return events.stream()
                 .map(e -> EventInfoResponse.builder()
                         .name(EventTypeEnum.getNameByEventNumber(e.getEventType()))
@@ -215,7 +215,7 @@ public class GlobalResponseMapper {
                                         .cell(CELL_NUMBER + i.getCellEntity().getCellName())
                                         .build())
                                 .toList())
-                        .guards(e.getGuradEntityList().stream()
+                        .guards(e.getGuardEntityList().stream()
                                 .map(g -> GuardInfoForEventResponse.builder()
                                         .name(g.getName())
                                         .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))

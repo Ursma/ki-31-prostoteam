@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна сторінка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f7fa;
+            color: #0277bd;
+        }
+        h1 {
+            margin-bottom: 40px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .button-container button {
+            width: 200px;
+            padding: 20px;
+            font-size: 18px;
+            background-color: #0277bd;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button-container button:hover {
+            background-color: #01579b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Головна сторінка</h1>
+    <div class="button-container">
+        <button><a href="inmate.html">В'язень</a></button>
+        <button><a href="guard.html">Охоронець</a></button>
+        <button><a href="cell.html">Клітка</a></button>
+        <button><a href="event.html">Подія</a></button>
+        <button><a href="crime.html">Стаття</a></button>
+    </div>
+</body>
+</html>

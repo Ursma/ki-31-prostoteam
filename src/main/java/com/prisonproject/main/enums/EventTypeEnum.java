@@ -1,6 +1,4 @@
 package com.prisonproject.main.enums;
-
-import com.prisonproject.main.dto.response.EventInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -30,7 +28,7 @@ public enum EventTypeEnum {
     UDO(6,
             "Гарна поведінка, виконання суспільних робіт дозволяють зменшити строк ув'язнення на 2 роки",
             -2,
-            "Дострокове визволення");
+            "Зменшення строку ув'язнення");
     private final Integer eventType;
     private final String description;
     private final Integer durability;

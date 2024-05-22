@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmate Management</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff; /* светло-голубой цвет фона */
+            color: #333;
+        }
+        h1 {
+            color: #007BFF; /* синий цвет заголовка */
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #007BFF; /* синий цвет меток */
+        }
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: calc(100% - 22px); /* учитывать padding и border */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF; /* синий цвет кнопки */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3; /* темно-синий цвет при наведении */
+        }
+        .info-container {
+            margin-top: 2000px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body style="margin-top: 300px;">
+    <h1>Inmate Management</h1>
+
+    <!-- Form to Add Inmate -->
+    <form id="inmateForm">
+
+        <h2>Add Inmate</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="birthday">Birthday:</label>
+        <input type="date" id="birthday" name="birthday" required><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+            <option value="3">Other</option>
+        </select><br>
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required><br>
+
+        <label for="crimeNumbers">Crime Numbers (comma separated):</label>
+        <input type="text" id="crimeNumbers" name="crimeNumbers" required><br>
+
+        <label for="cellName">Cell Name:</label>
+        <input type="text" id="cellName" name="cellName" required><br>
+
+        <button type="button" onclick="submitAddInmateForm()">Submit</button>
+    </form>
+
+    <!-- Form to Get Inmate Info -->
+    <form id="getInmateForm">
+        <h2>Get Inmate Info</h2>
+        <label for="inmateName">Name:</label>
+        <input type="text" id="inmateName" name="name" required><br>
+        <button type="button" onclick="getInmateInfo()">Get Info</button>
+    </form>
+
+    <!-- Form to Get Short Inmate Info -->
+    <form id="getShortInmateForm">
+        <h2>Get Short Inmate Info</h2>
+        <label for="shortInmateName">Name:</label>
+        <input type="text" id="shortInmateName" name="name" required><br>
+        <button type="button" onclick="getShortInmateInfo()">Get Short Info</button>
+    </form>
+
+    <!-- Button to Get All Inmates Info -->
+    <form id="getAllInmatesForm">
+        <h2>Get All Inmates Info</h2>
+        <button type="button" onclick="getAllInmatesInfo()">Get All Inmates Info</button>
+    </form>
+
+    <!-- Form to Get Inmates by Cell -->
+    <form id="getInmatesByCellForm">
+        <h2>Get Inmates by Cell</h2>
+        <label for="cellNameInput">Cell Name:</label>
+        <input type="text" id="cellNameInput" name="cellName" required><br>
+        <button type="button" onclick="getInmatesByCell()">Get Inmates by Cell</button>
+    </form>
+
+    <!-- Container to Display Inmate Info -->
+    <div id="inmateInfo" class="info-container" style="display: none;">
+        <div class="info-item"><strong>Name:</strong> <span id="infoName"></span></div>
+        <div class="info-item"><strong>Birthday:</strong> <span id="infoBirthday"></span></div>
+        <div class="info-item"><strong>Gender:</strong> <span id="infoGender"></span></div>
+        <div class="info-item"><strong>Start Date:</strong> <span id="infoStartDate"></span></div>
+        <div class="info-item"><strong>Crime Numbers:</strong> <span id="infoCrimeNumbers"></span></div>
+        <div class="info-item"><strong>Cell Name:</strong> <span id="infoCellName"></span></div>
+    </div>
+
+    <!-- Container to Display Short Inmate Info -->
+    <div id="shortInmateInfo" class="info-container" style="display: none;">
+        <div class="info-item"><strong>Name:</strong> <span id="shortInfoName"></span></div>
+        <div class="info-item"><strong>Birthday:</strong> <span id="shortInfoBirthday"></span></div>
+        <div class="info-item"><strong>Gender:</strong> <span id="shortInfoGender"></span></div>
+        <div class="info-item"><strong>Crime Numbers:</strong> <span id="shortInfoCrimeNumbers"></span></div>
+    </div>
+
+    <!-- Container to Display All Inmates Info -->
+    <div id="allInmatesInfo" class="info-container" style="display: none;">
+        <h3>All Inmates Info</h3>
+        <div id="allInmatesList"></div>
+    </div>
+
+    <!-- Container to Display Inmates by Cell Info -->
+    <div id="inmatesByCellInfo" class="info-container" style="display: none;">
+        <h3>Inmates by Cell Info</h3>
+        <div id="inmatesByCellList"></div>
+    </div>
+
+    <script>
+        function submitAddInmateForm() {
+            const name = document.getElementById('name').value;
+            const birthday = document.getElementById('birthday').value;
+            const gender = document.getElementById('gender').value;
+            const startDate = document.getElementById('startDate').value;
+            const crimeNumbers = document.getElementById('crimeNumbers').value.split(',').map(s => s.trim());
+            const cellName = document.getElementById('cellName').value;
+
+            axios.put('/inmate/add', {
+                name: name,
+                birthday: birthday,
+                gender: parseInt(gender),
+                startDate: startDate,
+                crimeNumbers: crimeNumbers,
+                cellName: cellName
+            })
+            .then(response => {
+                console.log('Успешно:', response.data);
+                alert('Inmate added successfully');
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке данных на сервер:', error);
+                alert('Error adding inmate');
+            });
+        }
+
+        function getInmateInfo() {
+            const inmateName = document.getElementById('inmateName').value;
+
+            axios.post('/inmate/get/full', {
+                name: inmateName
+            })
+            .then(response => {
+                const inmateInfo = response.data;
+                document.getElementById('infoName').textContent = inmateInfo.name;
+                document.getElementById('infoBirthday').textContent = inmateInfo.birthday;
+                document.getElementById('infoGender').textContent = inmateInfo.gender === 1 ? 'Male' : inmateInfo.gender === 2 ? 'Female' : 'Other';
+                document.getElementById('infoStartDate').textContent = inmateInfo.startDate;
+                document.getElementById('infoCrimeNumbers').textContent = inmateInfo.crimeNumbers.join(', ');
+                document.getElementById('infoCellName').textContent = inmateInfo.cellName;
+                document.getElementById('inmateInfo').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+                alert('Error retrieving inmate info');
+            });
+        }
+
+        function getShortInmateInfo() {
+            const inmateName = document.getElementById('shortInmateName').value;
+
+            axios.post('/inmate/get/all', {
+                name: inmateName
+            })
+            .then(response => {
+                const inmateInfo = response.data;
+                document.getElementById('shortInfoName').textContent = inmateInfo.name;
+                document.getElementById('shortInfoBirthday').textContent = inmateInfo.birthday;
+                document.getElementById('shortInfoGender').textContent = inmateInfo.gender === 1 ? 'Male' : inmateInfo.gender === 2 ? 'Female' : 'Other';
+                document.getElementById('shortInfoCrimeNumbers').textContent = inmateInfo.crimeNumbers.join(', ');
+                document.getElementById('shortInmateInfo').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+                alert('Error retrieving short inmate info');
+            });
+        }
+
+        function getAllInmatesInfo() {
+            axios.post('/get/all')
+            .then(response => {
+                const inmates = response.data;
+                const allInmatesList = document.getElementById('allInmatesList');
+                allInmatesList.innerHTML = ''; // Clear previous content
+
+                inmates.forEach(inmate => {
+                    const inmateDiv = document.createElement('div');
+                    inmateDiv.classList.add('info-item');
+                    inmateDiv.innerHTML = `
+                        <strong>Name:</strong> ${inmate.name}<br>
+                        <strong>Birthday:</strong> ${inmate.birthday}<br>
+                        <strong>Gender:</strong> ${inmate.gender === 1 ? 'Male' : inmate.gender === 2 ? 'Female' : 'Other'}<br>
+                        <strong>Crime Numbers:</strong> ${inmate.crimeNumbers.join(', ')}
+                    `;
+                    allInmatesList.appendChild(inmateDiv);
+                });
+                document.getElementById('allInmatesInfo').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+                alert('Error retrieving all inmates info');
+            });
+        }
+
+        function getInmatesByCell() {
+            const cellName = document.getElementById('cellNameInput').value;
+
+            axios.post('/get/by/cell', {
+                cellName: cellName
+            })
+            .then(response => {
+                const inmates = response.data;
+                const inmatesByCellList = document.getElementById('inmatesByCellList');
+                inmatesByCellList.innerHTML = ''; // Clear previous content
+
+                inmates.forEach(inmate => {
+                    const inmateDiv = document.createElement('div');
+                    inmateDiv.classList.add('info-item');
+                    inmateDiv.innerHTML = `
+                        <strong>Name:</strong> ${inmate.name}<br>
+                        <strong>Birthday:</strong> ${inmate.birthday}<br>
+                        <strong>Gender:</strong> ${inmate.gender === 1 ? 'Male' : inmate.gender === 2 ? 'Female' : 'Other'}<br>
+                        <strong>Crime Numbers:</strong> ${inmate.crimeNumbers.join(', ')}
+                    `;
+                    inmatesByCellList.appendChild(inmateDiv);
+                });
+                document.getElementById('inmatesByCellInfo').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+                alert('Error retrieving inmates by cell');
+            });
+        }
+    </script>
+</body>
+</html>

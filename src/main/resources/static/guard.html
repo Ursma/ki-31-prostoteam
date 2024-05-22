@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff; /* светло-голубой цвет фона */
+            color: #333;
+        }
+        h1 {
+            color: #007BFF; /* синий цвет заголовка */
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #007BFF; /* синий цвет меток */
+        }
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: calc(100% - 22px); /* учитывать padding и border */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF; /* синий цвет кнопки */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3; /* темно-синий цвет при наведении */
+        }
+        .info-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body style="margin-top: 300px;">
+    <h1>Guard Management</h1>
+
+    <!-- Form to Add Guard -->
+    <form id="guardForm">
+        <h2>Add Guard</h2>
+        <label for="guardName">Name:</label>
+        <input type="text" id="guardName" name="name" required><br>
+
+        <label for="guardBirthday">Birthday:</label>
+        <input type="date" id="guardBirthday" name="birthday" required><br>
+
+        <label for="guardStartDate">Start Date:</label>
+        <input type="date" id="guardStartDate" name="startDate" required><br>
+
+        <label for="guardGender">Gender:</label>
+        <select id="guardGender" name="gender" required>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+            <option value="3">Other</option>
+        </select><br>
+
+        <label for="guardShift">Shift:</label>
+        <input type="text" id="guardShift" name="shift" required><br>
+
+        <label for="guardCellId">Cell ID:</label>
+        <input type="text" id="guardCellId" name="cellId" required><br>
+
+        <button type="button" onclick="submitAddGuardForm()">Submit</button>
+    </form>
+
+    <!-- Form to Get Guard Info -->
+    <form id="getGuardInfoForm">
+        <h2>Get Guard Info</h2>
+        <label for="guardInfoName">Name:</label>
+        <input type="text" id="guardInfoName" name="name" required><br>
+        <button type="button" onclick="getGuardInfo()">Get Info</button>
+    </form>
+
+    <!-- Form to Get Short Guard Info -->
+    <form id="getShortGuardInfoForm">
+        <h2>Get Short Guard Info</h2>
+        <label for="shortGuardInfoName">Name:</label>
+        <input type="text" id="shortGuardInfoName" name="name" required><br>
+        <button type="button" onclick="getShortGuardInfo()">Get Short Info</button>
+    </form>
+
+    <!-- Button to Get All Guards Info -->
+    <form id="getAllGuardsInfoForm">
+        <h2>Get All Guards Info</h2>
+        <button type="button" onclick="getAllGuardsInfo()">Get All Guards Info</button>
+    </form>
+
+    <!-- Form to Get Guards by Cell -->
+    <form id="getGuardsByCellForm">
+        <h2>Get Guards by Cell</h2>
+        <label for="guardCellNameInput">Cell ID:</label>
+        <input type="text" id="guardCellNameInput" name="cellId" required><br>
+        <button type="button" onclick="getGuardsByCell()">Get Guards by Cell</button>
+    </form>
+
+    <!-- Container to Display Guard Info -->
+    <div id="guardInfo" class="info-container" style="display: none;">
+        <div class="info-item"><strong>Name:</strong> <span id="infoGuardName"></span></div>
+        <div class="info-item"><strong>Birthday:</strong> <span id="infoGuardBirthday"></span></div>
+        <div class="info-item"><strong>Start Date:</strong> <span id="infoGuardStartDate"></span></div>
+        <div class="info-item"><strong>Gender:</strong> <span id="infoGuardGender"></span></div>
+        <div class="info-item"><strong>Shift:</strong> <span id="infoGuardShift"></span></div>
+        <div class="info-item"><strong>Cell ID:</strong> <span id="infoGuardCellId"></span></div>
+    </div>
+
+    <!-- Container to Display Short Guard Info -->
+    <div id="shortGuardInfo" class="info-container" style="display: none;">
+        <div class="info-item"><strong>Name:</strong> <span id="shortInfoGuardName"></span></div>
+        <div class="info-item"><strong>Birthday:</strong> <span id="shortInfoGuardBirthday"></span></div>
+        <div class="info-item"><strong>Gender:</strong> <span id="shortInfoGuardGender"></span></div>
+            <div class="info-item"><strong>Shift:</strong> <span id="shortInfoGuardShift"></span></div>
+        </div>
+    
+        <!-- Container to Display All Guards Info -->
+        <div id="allGuardsInfo" class="info-container" style="display: none;">
+            <h2>All Guards Info</h2>
+            <div id="allGuardsList"></div>
+        </div>
+    
+        <!-- Container to Display Guards by Cell Info -->
+        <div id="guardsByCellInfo" class="info-container" style="display: none;">
+            <h2>Guards by Cell Info</h2>
+            <div id="guardsByCellList"></div>
+        </div>
+    
+        <script>
+            // JavaScript функции для взаимодействия с сервером
+            function submitAddGuardForm() {
+                // Получаем данные из формы
+                const name = document.getElementById('guardName').value;
+                const birthday = document.getElementById('guardBirthday').value;
+                const startDate = document.getElementById('guardStartDate').value;
+                const gender = document.getElementById('guardGender').value;
+                const shift = document.getElementById('guardShift').value;
+                const cellId = document.getElementById('guardCellId').value;
+    
+                // Отправляем данные на сервер
+                axios.put('/guard/add', {
+                    name: name,
+                    birthday: birthday,
+                    startDate: startDate,
+                    gender: gender,
+                    shift: shift,
+                    cellId: cellId
+                })
+                .then(response => {
+                    console.log('Успешно:', response.data);
+                    alert('Guard added successfully');
+                })
+                .catch(error => {
+                    console.error('Ошибка при отправке данных на сервер:', error);
+                    alert('Error adding guard');
+                });
+            }
+    
+            function getGuardInfo() {
+                const guardName = document.getElementById('guardInfoName').value;
+    
+                axios.post('/guard/get/full', {
+                    name: guardName
+                })
+                .then(response => {
+                    const guardInfo = response.data;
+                    document.getElementById('infoGuardName').textContent = guardInfo.name;
+                    document.getElementById('infoGuardBirthday').textContent = guardInfo.birthday;
+                    document.getElementById('infoGuardStartDate').textContent = guardInfo.startDate;
+                    document.getElementById('infoGuardGender').textContent = guardInfo.gender === 1 ? 'Male' : guardInfo.gender === 2 ? 'Female' : 'Other';
+                    document.getElementById('infoGuardShift').textContent = guardInfo.shift;
+                    document.getElementById('infoGuardCellId').textContent = guardInfo.cellId;
+                    document.getElementById('guardInfo').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных:', error);
+                    alert('Error retrieving guard info');
+                });
+            }
+    
+            function getShortGuardInfo() {
+                const guardName = document.getElementById('shortGuardInfoName').value;
+    
+                axios.post('/guard/get/short', {
+                    name: guardName
+                })
+                .then(response => {
+                    const guardInfo = response.data;
+                    document.getElementById('shortInfoGuardName').textContent = guardInfo.name;
+                    document.getElementById('shortInfoGuardBirthday').textContent = guardInfo.birthday;
+                    document.getElementById('shortInfoGuardGender').textContent = guardInfo.gender === 1 ? 'Male' : guardInfo.gender === 2 ? 'Female' : 'Other';
+                    document.getElementById('shortInfoGuardShift').textContent = guardInfo.shift;
+                    document.getElementById('shortGuardInfo').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных:', error);
+                    alert('Error retrieving short guard info');
+                });
+            }
+    
+            function getAllGuardsInfo() {
+                axios.post('/guard/get/all')
+                .then(response => {
+                    const guards = response.data;
+                    const allGuardsList = document.getElementById('allGuardsList');
+                    allGuardsList.innerHTML = ''; // Очищаем предыдущее содержимое
+    
+                    guards.forEach(guard => {
+                        const guardDiv = document.createElement('div');
+                        guardDiv.classList.add('info-item');
+                        guardDiv.innerHTML = `
+                            <strong>Name:</strong> ${guard.name}<br>
+                            <strong>Birthday:</strong> ${guard.birthday}<br>
+                            <strong>Start Date:</strong> ${guard.startDate}<br>
+                            <strong>Gender:</strong> ${guard.gender === 1 ? 'Male' : guard.gender === 2 ? 'Female' : 'Other'}<br>
+                            <strong>Shift:</strong> ${guard.shift}<br>
+                            <strong>Cell ID:</strong> ${guard.cellId}
+                        `;
+                        allGuardsList.appendChild(guardDiv);
+                    });
+                    document.getElementById('allGuardsInfo').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных:', error);
+                    alert('Error retrieving all guards info');
+                });
+            }
+    
+            function getGuardsByCell() {
+                const cellId = document.getElementById('guardCellNameInput').value;
+    
+                axios.post('/guard/get/by/cell', {
+                    cellId: cellId
+                })
+                .then(response => {
+                    const guards = response.data;
+                    const guardsByCellList = document.getElementById('guardsByCellList');
+                    guardsByCellList.innerHTML = ''; // Очищаем предыдущее содержимое
+    
+                    guards.forEach(guard => {
+                        const guardDiv = document.createElement('div');
+                        guardDiv.classList.add('info-item');
+                        guardDiv.innerHTML = `
+                            <strong>Name:</strong> ${guard.name}<br>
+                            <strong>Birthday:</strong> ${guard.birthday}<br>
+                            <strong>Start Date:</strong> ${guard.startDate}<br>
+                            <strong>Gender:</strong> ${guard.gender === 1 ? 'Male' : guard.gender === 2 ? 'Female' : 'Other'}<br>
+                            <strong>Shift:</strong> ${guard.shift}
+                        `;
+                        guardsByCellList.appendChild(guardDiv);
+                    });
+                    document.getElementById('guardsByCellInfo').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных:', error);
+                    alert('Error retrieving guards by cell');
+                });
+            }
+        </script>
+    </body>
+    </html>
+    
