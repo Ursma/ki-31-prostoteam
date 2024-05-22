@@ -17,8 +17,8 @@ public class CellEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "cell_number")
-    private Integer cellNumber;
+    @Column(name = "cell_name")
+    private String cellName;
     @Column(name = "current_occupancy")
     private Integer currentOccupancy;
     @Column(name = "capacity")

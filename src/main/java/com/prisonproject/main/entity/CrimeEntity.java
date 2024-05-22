@@ -18,7 +18,7 @@ public class CrimeEntity {
     @Column(name = "id")
     private Integer id;
     @Column(name = "crime_number")
-    private Integer crimeNumber;
+    private String crimeNumber;
     @Column(name = "durability")
     private Integer durability;
 }

@@ -31,9 +31,9 @@ public class GlobalResponseMapper {
         return InmateInfoResponse.builder()
                 .name(entity.getName())
                 .cell(CellInfoWithoutInmateResponse.builder()
-                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellNumber())
+                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellName())
                         .currentCapacity(CURRENT_OCCUPANCY + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
-                        .guards(guardRepository.findAllByCellId(entity.getCellEntity().getId())
+                        .guards(guardRepository.findAllByCellEntity(entity.getCellEntity())
                                 .stream()
                                 .map(g -> GuardInfoWithoutCellResponse.builder()
                                         .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))
@@ -41,16 +41,16 @@ public class GlobalResponseMapper {
                                                 MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
                                                 g.getBirthday().getYear() + YEAR)
                                         .startDate(REGISTRATED + g.getStartDate().getDayOfMonth() + " " +
-                                                MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
-                                                g.getBirthday().getYear() + YEAR)
+                                                MonthTranslateEnum.getDescription(g.getStartDate().getMonth()) + " " +
+                                                g.getStartDate().getYear() + YEAR)
                                         .name(g.getName())
                                         .shift(ShiftEnum.getDescriptionByNum(g.getShift()))
                                         .build())
                                 .toList())
                         .build())
                 .endDate(FREE + entity.getEndDate().getDayOfMonth() + " " +
-                MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
-                entity.getBirthday().getYear() + YEAR)
+                MonthTranslateEnum.getDescription(entity.getEndDate().getMonth()) + " " +
+                        entity.getEndDate().getYear() + YEAR)
                 .birthday(BIRTH_DATE + entity.getBirthday().getDayOfMonth() + " " +
                         MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
                         entity.getBirthday().getYear() + YEAR)
@@ -71,20 +71,20 @@ public class GlobalResponseMapper {
     public CellInfoResponse cellEntityToResponse(CellEntity entity){
         return CellInfoResponse.builder()
                 .currentCapacity(CURRENT_OCCUPANCY + entity.getCurrentOccupancy() + "/" + entity.getCapacity())
-                .cellNumber(CELL_NUMBER + entity.getCellNumber())
-                .inmates(inmateRepository.findAllByCellId(entity.getId())
+                .cellNumber(CELL_NUMBER + entity.getCellName())
+                .inmates(inmateRepository.findAllByCellEntity(entity)
                         .stream()
                         .map(i -> InmateInfoWithoutCellResponse.builder()
                                 .name(i.getName())
                                 .endDate(FREE + i.getEndDate().getDayOfMonth() + " " +
-                                        MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
-                                        i.getBirthday().getYear() + YEAR)
+                                        MonthTranslateEnum.getDescription(i.getEndDate().getMonth()) + " " +
+                                        i.getEndDate().getYear() + YEAR)
                                 .birthday(BIRTH_DATE + i.getBirthday().getDayOfMonth() + " " +
                                         MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
                                         i.getBirthday().getYear() + YEAR)
                                 .startDate(REGISTRATED + i.getStartDate().getDayOfMonth() + " " +
-                                        MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
-                                        i.getBirthday().getYear() + YEAR)
+                                        MonthTranslateEnum.getDescription(i.getStartDate().getMonth()) + " " +
+                                        i.getStartDate().getYear() + YEAR)
                                 .gender(GenderTypeEnum.getDescriptionByGenderType(i.getGender()))
                                 .crimes(i.getCrimeEntityList()
                                         .stream()
@@ -95,7 +95,7 @@ public class GlobalResponseMapper {
                                         .toList())
                                 .build())
                         .toList())
-                .guards(guardRepository.findAllByCellId(entity.getId())
+                .guards(guardRepository.findAllByCellEntity(entity)
                         .stream()
                         .map(g -> GuardInfoWithoutCellResponse.builder()
                                 .gender(GenderTypeEnum.getDescriptionByGenderType(g.getGender()))
@@ -103,8 +103,8 @@ public class GlobalResponseMapper {
                                         MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
                                         g.getBirthday().getYear() + YEAR)
                                 .startDate(REGISTRATED + g.getStartDate().getDayOfMonth() + " " +
-                                        MonthTranslateEnum.getDescription(g.getBirthday().getMonth()) + " " +
-                                        g.getBirthday().getYear() + YEAR)
+                                        MonthTranslateEnum.getDescription(g.getStartDate().getMonth()) + " " +
+                                        g.getStartDate().getYear() + YEAR)
                                 .name(g.getName())
                                 .build())
                         .toList())
@@ -118,24 +118,24 @@ public class GlobalResponseMapper {
                         MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
                         entity.getBirthday().getYear() + YEAR)
                 .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
-                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
-                        entity.getBirthday().getYear() + YEAR)
+                        MonthTranslateEnum.getDescription(entity.getStartDate().getMonth()) + " " +
+                        entity.getStartDate().getYear() + YEAR)
                 .name(entity.getName())
                 .shift(ShiftEnum.getDescriptionByNum(entity.getShift()))
                 .cell(CellInfoWithoutGuardResponse.builder()
-                        .inmates(inmateRepository.findAllByCellId(entity.getCellId())
+                        .inmates(inmateRepository.findAllByCellEntity(entity.getCellEntity())
                                 .stream()
                                 .map(i -> InmateInfoWithoutCellResponse.builder()
                                         .name(i.getName())
                                         .endDate(FREE + i.getEndDate().getDayOfMonth() + " " +
-                                                MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
-                                                i.getBirthday().getYear() + YEAR)
+                                                MonthTranslateEnum.getDescription(i.getEndDate().getMonth()) + " " +
+                                                i.getEndDate().getYear() + YEAR)
                                         .birthday(BIRTH_DATE + i.getBirthday().getDayOfMonth() + " " +
                                                 MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
                                                 i.getBirthday().getYear() + YEAR)
                                         .startDate(REGISTRATED + i.getStartDate().getDayOfMonth() + " " +
-                                                MonthTranslateEnum.getDescription(i.getBirthday().getMonth()) + " " +
-                                                i.getBirthday().getYear() + YEAR)
+                                                MonthTranslateEnum.getDescription(i.getStartDate().getMonth()) + " " +
+                                                i.getStartDate().getYear() + YEAR)
                                         .gender(GenderTypeEnum.getDescriptionByGenderType(i.getGender()))
                                         .crimes(i.getCrimeEntityList()
                                                 .stream()
@@ -146,7 +146,7 @@ public class GlobalResponseMapper {
                                                 .toList())
                                         .build())
                                 .toList())
-                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellNumber())
+                        .cellNumber(CELL_NUMBER + entity.getCellEntity().getCellName())
                         .currentCapacity(CURRENT_OCCUPANCY + entity.getCellEntity().getCurrentOccupancy() + "/" + entity.getCellEntity().getCapacity())
                         .build())
                 .build();
@@ -157,8 +157,8 @@ public class GlobalResponseMapper {
                 .name(entity.getName())
                 .shift(ShiftEnum.getDescriptionByNum(entity.getShift()))
                 .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
-                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
-                        entity.getBirthday().getYear() + YEAR)
+                        MonthTranslateEnum.getDescription(entity.getStartDate().getMonth()) + " " +
+                        entity.getStartDate().getYear() + YEAR)
                 .birthday(BIRTH_DATE +entity.getBirthday().getDayOfMonth() + " " +
                         MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
                         entity.getBirthday().getYear() + YEAR)
@@ -170,15 +170,15 @@ public class GlobalResponseMapper {
         return InmateInfoWithoutCellResponse.builder()
                 .name(entity.getName())
                 .gender(GenderTypeEnum.getDescriptionByGenderType(entity.getGender()))
-                .endDate(BIRTH_DATE + entity.getEndDate().getDayOfMonth() + " " +
-                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
-                        entity.getBirthday().getYear() + YEAR)
+                .endDate(FREE + entity.getEndDate().getDayOfMonth() + " " +
+                        MonthTranslateEnum.getDescription(entity.getEndDate().getMonth()) + " " +
+                        entity.getEndDate().getYear() + YEAR)
                 .birthday(BIRTH_DATE + entity.getBirthday().getDayOfMonth() + " " +
                         MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
                         entity.getBirthday().getYear() + YEAR)
                 .startDate(REGISTRATED + entity.getStartDate().getDayOfMonth() + " " +
-                        MonthTranslateEnum.getDescription(entity.getBirthday().getMonth()) + " " +
-                        entity.getBirthday().getYear() + YEAR)
+                        MonthTranslateEnum.getDescription(entity.getStartDate().getMonth()) + " " +
+                        entity.getStartDate().getYear() + YEAR)
                 .crimes(entity.getCrimeEntityList().stream().map(c -> CrimeInfoResponse.builder()
                         .state(STATE + c.getCrimeNumber())
                         .durability(DURABILITY + c.getDurability())

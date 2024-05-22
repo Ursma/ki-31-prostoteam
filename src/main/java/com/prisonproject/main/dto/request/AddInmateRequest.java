@@ -14,7 +14,6 @@ public class AddInmateRequest {
     private LocalDate birthday;
     private Integer gender;
     private LocalDate startDate;
-    private LocalDate endDate;
-    private List<Integer> crimeIds;
-    private Integer cellId;
+    private List<String> crimeNumbers;
+    private String cellName;
 }

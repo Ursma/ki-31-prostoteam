@@ -6,10 +6,7 @@ import com.prisonproject.main.service.CrimeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/crime")
@@ -19,6 +16,7 @@ public class CrimeController {
     private final CrimeService crimeService;
 
     @PutMapping("/add")
+    @CrossOrigin(origins = "*")
     @Operation(summary = "Додати нову статю", description = "Додає статю з терміном ув'язнення")
     public CrimeEntity addCrime(@RequestBody AddCrimeRequest request){
         return crimeService.addCrime(request);

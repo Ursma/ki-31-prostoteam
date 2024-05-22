@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetResponseById {
-    private Integer id;
+public class GetResponseByCellName {
+    private String cellName;
 }

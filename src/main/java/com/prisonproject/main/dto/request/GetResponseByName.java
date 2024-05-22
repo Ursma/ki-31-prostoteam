@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCrimeRequest {
-    private String crimeNumber;
-    private Integer durability;
+public class GetResponseByName {
+    private String name;
 }

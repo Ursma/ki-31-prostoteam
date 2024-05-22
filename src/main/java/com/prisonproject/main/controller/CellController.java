@@ -6,10 +6,7 @@ import com.prisonproject.main.service.CellService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -20,6 +17,7 @@ public class CellController {
     private final CellService cellService;
 
     @PutMapping("/add")
+    @CrossOrigin(origins = "*")
     @Operation(summary = "Get all cells")
     public CellEntity addCell(@RequestBody AddCellRequest request){
         return cellService.addCell(request);

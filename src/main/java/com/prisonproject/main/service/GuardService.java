@@ -1,7 +1,8 @@
 package com.prisonproject.main.service;
 
 import com.prisonproject.main.dto.request.AddGuardRequest;
-import com.prisonproject.main.dto.request.GetResponseById;
+import com.prisonproject.main.dto.request.GetResponseByCellName;
+import com.prisonproject.main.dto.request.GetResponseByName;
 import com.prisonproject.main.dto.response.GuardInfoResponse;
 import com.prisonproject.main.dto.response.GuardInfoWithoutCellResponse;
 import com.prisonproject.main.entity.CellEntity;
@@ -9,6 +10,7 @@ import com.prisonproject.main.entity.GuardEntity;
 import com.prisonproject.main.mapper.GlobalResponseMapper;
 import com.prisonproject.main.repository.CellRepository;
 import com.prisonproject.main.repository.GuardRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,26 +25,28 @@ public class GuardService {
     private final GlobalResponseMapper globalResponseMapper;
 
     public GuardEntity addGuard(AddGuardRequest request){
+        checkIsValidName(request.getName());
         GuardEntity guardEntity = new GuardEntity();
         guardEntity.setBirthday(request.getBirthday());
         guardEntity.setName(request.getName());
         guardEntity.setStartDate(request.getStartDate());
         guardEntity.setGender(request.getGender());
         guardEntity.setShift(request.getShift());
-        guardEntity.setCellId(request.getCellId());
-        CellEntity cellEntity = cellRepository.findById(request.getCellId())
+
+        CellEntity cellEntity = cellRepository.findByCellName(request.getCellName())
                 .orElseThrow(() -> new EntityNotFoundException("Камера не знайдена"));
         guardEntity.setCellEntity(cellEntity);
+        guardEntity.setCellId(cellEntity.getId());
         return guardRepository.save(guardEntity);
     }
 
-    public GuardInfoResponse getGuardInfo(GetResponseById body){
-        return globalResponseMapper.guardEntityToResponse(guardRepository.findById(body.getId())
+    public GuardInfoResponse getGuardInfo(GetResponseByName body){
+        return globalResponseMapper.guardEntityToResponse(guardRepository.findByNameContainingIgnoreCase(body.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Охоронника не знайдено")));
     }
 
-    public GuardInfoWithoutCellResponse getShortGuardInfo(GetResponseById body){
-        return globalResponseMapper.guardEntityToShortInfoResponse(guardRepository.findById(body.getId())
+    public GuardInfoWithoutCellResponse getShortGuardInfo(GetResponseByName body){
+        return globalResponseMapper.guardEntityToShortInfoResponse(guardRepository.findByNameContainingIgnoreCase(body.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Охоронника не знайдено")));
     }
 
@@ -53,10 +57,16 @@ public class GuardService {
                 .toList();
     }
 
-    public List<GuardInfoWithoutCellResponse> getAllGuardsByCell(GetResponseById body) {
-        return guardRepository.findAllByCellId(body.getId())
+    public List<GuardInfoWithoutCellResponse> getAllGuardsByCell(GetResponseByCellName body) {
+        CellEntity cell = cellRepository.findByCellName(body.getCellName())
+                .orElseThrow(() -> new EntityNotFoundException("Камера не знайдена"));
+        return guardRepository.findAllByCellEntity(cell)
                 .stream()
                 .map(globalResponseMapper::guardEntityToShortInfoResponse)
                 .toList();
+    }
+
+    private void checkIsValidName(String name) {
+        if(Boolean.TRUE.equals(guardRepository.existsInmateEntityByName(name))) throw new EntityExistsException("Охоронець з таким ім'ям вже існує");
     }
 }

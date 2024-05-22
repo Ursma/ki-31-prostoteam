@@ -14,6 +14,6 @@ public class AddGuardRequest {
     private LocalDate birthday;
     private LocalDate startDate;
     private Integer gender;
-    private Integer cellId;
+    private String cellName;
     private Integer shift;
 }

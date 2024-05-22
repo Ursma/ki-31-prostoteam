@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddCellRequest {
-    private Integer cellNumber;
-    private Integer currentOccupancy;
+    private String cellName;
     private Integer capacity;
 }
